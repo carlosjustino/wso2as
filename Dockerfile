@@ -25,14 +25,19 @@ RUN mkdir wso2
 
 WORKDIR /opt/wso2
 
-ADD packs/wso2as-5.3.0.tar /opt/wso2/
+ADD packs/wso2as-5.3.0.zip /opt/wso2/
+RUN unzip -q wso2as-5.3.0.zip
+RUN rm wso2as-5.3.0.zip
 RUN ln -snf /opt/wso2/wso2as-5.3.0 producaoApp
 
-VOLUME ["/opt/wso2/producaoApp/repository/conf" , "/opt/wso2/producaoApp/repository/database"]
+VOLUME ["/opt/wso2/producaoApp/repository/conf" , "/opt/wso2/producaoApp/repository/database", "/opt/wso2/producaoApp/repository/deployment/server"]
+
 
 COPY files/conf /opt/wso2/producaoApp/repository/conf
 
 COPY files/database /opt/wso2/producaoApp/repository/database
+
+COPY files/server /opt/wso2/producaoApp/repository/deployment/server
 
 EXPOSE 9443 9763 8243 8280 5000
 
