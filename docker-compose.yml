@@ -1,8 +1,7 @@
-version: '3.7'
+version: '3.4'
 
 networks:
    backend:
-     driver: overlay
 
 services: 
     wso2as:
@@ -12,9 +11,10 @@ services:
           timeout: 10s
           retries: 3
           start_period: 25s
-       image: 127.0.0.1:5000/carlosjustino/wso2as
+       image: carlosjustino/wso2as
        expose: 
          - 9443
+         - 9763
        ports:
             - 9443:9443
             - 9763:9763
@@ -47,12 +47,12 @@ services:
           - type: bind
             source: C:\carlosj\apps\docker\volumes\server
             target: /opt/wso2/producaoApp/repository/deployment/server
-       deploy:
-            mode: replicated
-            endpoint_mode: vip
-            replicas: 2
-            update_config:
-                parallelism: 2
-                delay: 10s
-            restart_policy:
-                condition: on-failure
+#       deploy:
+#            mode: replicated
+#            replicas: 1
+#            update_config:
+#                parallelism: 2
+#                delay: 10s
+#            restart_policy:
+#                condition: on-failure
+#
