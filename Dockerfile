@@ -46,7 +46,7 @@ EXPOSE 9443 9763 8243 8280 5000
 ###################
 ENV JAVA_HOME /opt/java
 ENV PATH=$PATH:/opt/java/bin
-
 RUN java -version
+RUN chmod a+x /opt/wso2/producaoApp/bin/*.sh
 
 CMD ["/opt/wso2/producaoApp/bin/wso2server.sh"]

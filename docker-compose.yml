@@ -1,0 +1,58 @@
+version: '3.7'
+
+networks:
+   backend:
+     driver: overlay
+
+services: 
+    wso2as:
+       healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:9763/hc/hc.json"]
+          interval: 1m30s
+          timeout: 10s
+          retries: 3
+          start_period: 25s
+       image: 127.0.0.1:5000/carlosjustino/wso2as
+       expose: 
+         - 9443
+       ports:
+            - 9443:9443
+            - 9763:9763
+       networks:
+            - backend
+       build: 
+          context: .
+          cache_from: 
+             - carlosjustino/wso2as
+             - carlosjustino/wso2-os-base
+       environment: 
+            - "JAVA_OPTS=-Xms200m -Xmx1G"
+       ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 4096
+            hard: 65536
+          nproc:
+            soft: 20000
+            hard: 20000
+       volumes:
+          - type: bind
+            source: C:\carlosj\apps\docker\volumes\conf
+            target: /opt/wso2/producaoApp/repository/conf
+          - type: bind
+            source: C:\carlosj\apps\docker\volumes\database
+            target: /opt/wso2/producaoApp/repository/database
+          - type: bind
+            source: C:\carlosj\apps\docker\volumes\server
+            target: /opt/wso2/producaoApp/repository/deployment/server
+       deploy:
+            mode: replicated
+            endpoint_mode: vip
+            replicas: 2
+            update_config:
+                parallelism: 2
+                delay: 10s
+            restart_policy:
+                condition: on-failure
